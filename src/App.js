@@ -70,26 +70,26 @@ export default App;
 
 
 
-{/* Nested protected Route *-------------------/}
-{/* 
-        <Route
-          path="/add-category"
-          element={
-            <PrivateProtectedRoute>
-              <AddNewCategory />
-            </PrivateProtectedRoute>
-          }
-        /> */}
+// {/* Nested protected Route *-------------------/}
+// {/* 
+//         <Route
+//           path="/add-category"
+//           element={
+//             <PrivateProtectedRoute>
+//               <AddNewCategory />
+//             </PrivateProtectedRoute>
+//           }
+//         /> */}
 
 
-{/* Non Protected Route*--------------/}
+// {/* Non Protected Route*--------------/}
 
-{/* <Route
-          path="/add-category"
-          element={
-              <AddNewCategory />
-          }
-        /> */}
+// {/* <Route
+//           path="/add-category"
+//           element={
+//               <AddNewCategory />
+//           }
+//         /> */}
 
 
-{/* <Route path="/add-category" element={<CategoryList />}/> */}
+// {/* <Route path="/add-category" element={<CategoryList />}/> */}
