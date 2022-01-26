@@ -14,6 +14,7 @@ import PostDetails from './components/Posts/PostDetails';
 import UpdatePost from './components/Posts/UpdatePost';
 import UpdateComment from './components/Comments/UpdateComment';
 import Profile from './components/Users/Profile/Profile';
+import UploadProfilePhoto from './components/Users/Profile/UploadProfilePhoto';
 
 
 function App() {
@@ -63,6 +64,10 @@ function App() {
 
           <Route path="/profile" element={<PrivateProtectedRoute />}>
                     <Route path="" element={<Profile />} />
+          </Route>
+
+          <Route path="/upload-photo/:id" element={<PrivateProtectedRoute />}>
+                    <Route path="" element={<UploadProfilePhoto />} />
           </Route>
 
 
