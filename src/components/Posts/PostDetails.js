@@ -24,6 +24,7 @@ const PostDetails = () => {
   const post = useSelector(state => state?.post);
   const {postDetails, loading, serverErr, appErr, isDeleted} = post;
 
+  console.log(postDetails?.comments)
 
   //get login user
   const user = useSelector(state => state?.users);
@@ -31,9 +32,6 @@ const PostDetails = () => {
  
   //post user id === login user id 
   const isCreatedBy = postDetails?.user?._id === _id;
-
-  // console.log(postDetails?.user?._id)
-  // console.log(_id)
 
 
   //Navigate after updating, deleting post
