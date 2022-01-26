@@ -15,6 +15,7 @@ import UpdatePost from './components/Posts/UpdatePost';
 import UpdateComment from './components/Comments/UpdateComment';
 import Profile from './components/Users/Profile/Profile';
 import UploadProfilePhoto from './components/Users/Profile/UploadProfilePhoto';
+import { baseUrl } from './utils/baseURL';
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
 
 {/* Non Protected Route  */}
         <Route path="/" element={<HomePage />}/>
-        <Route path="/register" element={<Register />}/>
+        <Route path={`${baseUrl}/register`} element={<Register />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/posts" element={<PostsList />}/>
         <Route path="/posts/:id" element={<PostDetails />}/>
