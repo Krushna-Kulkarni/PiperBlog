@@ -1,6 +1,11 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { createCommentAction } from "../../redux/slices/comments/commentSlices";
+
+
 
 //Form schema
 const formSchema = Yup.object({
@@ -8,6 +13,11 @@ const formSchema = Yup.object({
 });
 
 const AddComment = ({ postId }) => {
+  //dispatch 
+  const dispatch = useDispatch();
+  
+  
+
   const formik = useFormik({
     initialValues: {
       description: "",
@@ -17,7 +27,9 @@ const AddComment = ({ postId }) => {
         postId,
         description: values?.description,
       };
-      console.log(data);
+      //dispatch Action
+
+        dispatch(createCommentAction(data))
     },
     validationSchema: formSchema,
   });

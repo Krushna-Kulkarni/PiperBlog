@@ -31,7 +31,6 @@ const PostDetails = () => {
  
   //post user id === login user id 
   const isCreatedBy = postDetails?.user?._id === _id;
-  console.log(isCreatedBy)
 
   // console.log(postDetails?.user?._id)
   // console.log(_id)
