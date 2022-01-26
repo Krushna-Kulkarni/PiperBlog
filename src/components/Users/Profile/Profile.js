@@ -1,15 +1,42 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   HeartIcon,
   EmojiSadIcon,
   UploadIcon,
   UserIcon,
 } from "@heroicons/react/outline";
-
 import { MailIcon, EyeIcon } from "@heroicons/react/solid";
+import { userProfileAction } from "../../../redux/slices/users/usersSlices";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import DateFormatter from "../../../utils/DateFormatter";
+import capitalize from 'capitalize-word'
+
+
+
 
 export default function Profile() {
+
+  //get user id from store
+  const state = useSelector((state) => state.users);
+  const {userAuth} = state;
+  const id = userAuth?._id;
+ 
+ const dispatch = useDispatch();
+
+ //fetch user profile
+ useEffect(() =>{
+   dispatch(userProfileAction(id))
+ },[id, dispatch])
+
+//user data from store
+const users = useSelector((state) => state.users);
+const {profile, loading, appErr, serverErr} = users;
+
+console.log(profile)
+
+
   return (
     <>
       <div className="h-screen flex overflow-hidden bg-white">
@@ -24,8 +51,8 @@ export default function Profile() {
                   <div>
                     <img
                       className="h-32 w-full object-cover lg:h-48"
-                      // src={profile?.profilePhoto}
-                      // alt={profile?.fullName}
+                      src={profile?.profilePhoto}
+                      alt={profile?.firstName}
                     />
                   </div>
                   <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,35 +60,34 @@ export default function Profile() {
                       <div className="flex -mt-20">
                         <img
                           className="h-24 w-24 rounded-full  ring-4 ring-white sm:h-32 sm:w-32"
-                          // src={profile?.profilePhoto}
-                          // alt={profile?.fullName}
+                          src={profile?.profilePhoto}
+                          alt={profile?.firstName}
                         />
                       </div>
                       <div className="mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
                         <div className=" flex flex-col 2xl:block mt-10 min-w-0 flex-1">
                           <h1 className="text-2xl font-bold text-gray-900 ">
-                            {/* {profile?.fullName} */}
+                          {profile?.firstName} {profile?.lastName}
 
                             <span className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
                               {/* {profile?.accountType} */}
                             </span>
                             {/* Display if verified or not */}
-                            <span className="inline-flex ml-2 items-center px-3 py-0.5  rounded-lg text-sm font-medium bg-green-600 text-gray-300">
-                              Account Verified
-                            </span>
 
-                            <span className="inline-flex ml-2 items-center px-3 py-0.5  rounded-lg text-sm font-medium bg-red-600 text-gray-300">
+                            {profile?.isAccountVerified ?(<span className="inline-flex ml-2 items-center px-3 py-0.5  rounded-lg text-sm font-medium bg-green-600 text-gray-300">
+                              Account Verified
+                            </span>):(<span className="inline-flex ml-2 items-center px-3 py-0.5  rounded-lg text-sm font-medium bg-red-600 text-gray-300">
                               Unverified Account
-                            </span>
+                            </span>)}
                           </h1>
                           <p className="m-3 text-lg">
-                            Date Joined:
-                            {/* <DateFormatter date={profile?.createdAt} />{" "} */}
+                            Date Joined: 
+                            <DateFormatter date={profile?.createdAt} />{" "}
                           </p>
-                          <p className="text-green-400 mt-2 mb-2">
-                            {/* {profile?.posts.length} posts{" "}
+                          <p className="text-green-600 mt-2 mb-2">
+                            {profile?.posts.length} posts{" "}
                             {profile?.followers.length} followers{" "}
-                            {profile?.following.length} following */}
+                            {profile?.following.length} following
                           </p>
                           {/* Who view my profile */}
                           <div className="flex items-center  mb-2">
@@ -151,7 +177,7 @@ export default function Profile() {
                     </div>
                     <div className="hidden sm:block 2xl:hidden mt-6 min-w-0 flex-1">
                       <h1 className="text-2xl font-bold text-gray-900 truncate">
-                        {/* {profile?.lastName} */}Last Name
+                      {profile?.firstName} {profile?.lastName}
                       </h1>
                     </div>
                   </div>
@@ -192,38 +218,38 @@ export default function Profile() {
                   {/* All my Post */}
                   <div className="w-full md:w-2/3 px-4 mb-4 md:mb-0">
                     <h1 className="text-center text-xl border-gray-500 mb-2 border-b-2">
-                      My Post
+                      My Posts - {profile?.posts?.length}
                     </h1>
                     {/* Loo here */}
-                    <div className="flex flex-wrap  -mx-3 mt-3  lg:mb-6">
+                    {profile?.posts?.length <=0 ? (<h2 className="text-center text-xl">No Posts Found</h2>):profile?.posts?.map(post =>(<div className="flex flex-wrap  -mx-3 mt-3  lg:mb-6">
                       <div className="mb-2   w-full lg:w-1/4 px-3">
                         <Link to="#">
                           <img
                             className="object-cover h-40 rounded"
-                            // src={post?.image}
+                            src={post?.image}
                             alt="poster"
                           />
                         </Link>
                       </div>
                       <div className="w-full lg:w-3/4 px-3">
-                        <Link to="#"
-                          // to={`/post/${post?._id}`}
+                        <Link
+                          to={`/posts/${post?._id}`}
                           className="hover:underline"
                         >
-                          <h3 className="mb-1 text-2xl text-green-400 font-bold font-heading">
-                            {/* {capitalizeWord(post?.title)} */}
+                          <h3 className="mb-1 text-2xl text-green-600 font-bold font-heading">
+                            {capitalize(post?.title)}
                           </h3>
                         </Link>
                         <p className="text-gray-600 truncate">
-                          {/* {post?.description} */}
+                          {post?.description}
                         </p>
                         {/* Read more */}
-                        <Link to="#"
+                        <Link
                           className="text-indigo-500 hover:underline"
-                          // to={`/post/${post?._id}`}
-                        ></Link>
+                          to={`/posts/${post?._id}`}
+                        >Read more</Link>
                       </div>
-                    </div>
+                    </div>))}
                   </div>
                 </div>
               </article>
