@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import DateFormatter from "../../utils/DateFormatter";
 import LoadingComponent from "../../utils/LoadingComponent";
 import AddComment from "../Comments/AddComment";
+import CommentsList from "../Comments/CommentsList";
 
 
 
@@ -14,17 +15,19 @@ const PostDetails = () => {
   const { id } = useParams();
   
   const dispatch = useDispatch();
-  
-  useEffect(() =>{
-    dispatch(fetchPostDetailsAction(id))
-  }, [id, dispatch])
 
   //select post details from store
 
   const post = useSelector(state => state?.post);
   const {postDetails, loading, serverErr, appErr, isDeleted} = post;
+  
+  //select comments from store
+  const comment = useSelector(state => state?.comments);
+  const {commentCreated} = comment;
 
-  console.log(postDetails?.comments)
+  useEffect(() =>{
+    dispatch(fetchPostDetailsAction(id))
+  }, [id,commentCreated, dispatch])
 
   //get login user
   const user = useSelector(state => state?.users);
@@ -40,7 +43,7 @@ const PostDetails = () => {
 
   return (
     <>
-      {loading ? (<div><LoadingComponent/></div>) : appErr || serverErr ? (<h1 className="h-screen text-red-600 text-xl">{serverErr}{appErr}</h1>):(<section class="py-20 2xl:py-40 bg-gray-800 overflow-hidden">
+      {loading ? (<div><LoadingComponent/></div>) : appErr || serverErr ? (<h1 className="h-screen text-red-600 text-xl">{serverErr}{appErr}</h1>):(<section className="py-20 2xl:py-40 bg-gray-800 overflow-hidden">
         <div className="container px-4 mx-auto">
           {/* Post Image */}
           <img
@@ -92,7 +95,7 @@ const PostDetails = () => {
         <AddComment postId={id}/>
         <div className="flex justify-center  items-center">
           {/* <CommentsList comments={post?.comments} postId={post?._id} /> */}
-          CommentsList
+          <CommentsList comments={postDetails?.comments}/>
         </div>
       </section>) }
     </>
