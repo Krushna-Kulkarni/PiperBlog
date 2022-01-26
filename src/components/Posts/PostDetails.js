@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { PencilAltIcon, TrashIcon } from "@heroicons/react/solid";
-import { fetchPostDetailsAction, updatePostAction } from "../../redux/slices/posts/postSlices";
+import { deletePostAction, fetchPostDetailsAction, updatePostAction } from "../../redux/slices/posts/postSlices";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import DateFormatter from "../../utils/DateFormatter";
 import LoadingComponent from "../../utils/LoadingComponent";
+
 
 
 const PostDetails = () => {
@@ -17,11 +18,14 @@ const PostDetails = () => {
     dispatch(fetchPostDetailsAction(id))
   }, [id, dispatch])
 
-  //get post details from store
+  //select post details from store
 
   const post = useSelector(state => state?.post);
-  const {postDetails, loading, serverErr, appErr} = post;
+  const {postDetails, loading, serverErr, appErr, isDeleted} = post;
 
+
+  //Navigate after updating, deleting post
+ if(isDeleted) return <Navigate to ="/posts" />
 
 
   return (
@@ -66,7 +70,7 @@ const PostDetails = () => {
                   <Link to={`/update-post/${postDetails?._id}`} className="p-3">
                     <PencilAltIcon className="h-8 mt-3 text-yellow-300" />
                   </Link>
-                  <button className="ml-3">
+                  <button onClick={() => dispatch(deletePostAction(postDetails?._id))}className="ml-3">
                     <TrashIcon className="h-8 mt-3 text-red-600" />
                   </button>
                 </p>

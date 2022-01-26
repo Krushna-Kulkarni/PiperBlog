@@ -7,6 +7,7 @@ import { baseUrl } from '../../../utils/baseURL';
 
 const resetPost = createAction("category/reset");
 const resetPostEdit = createAction("post/reset");
+const resetPostDelete = createAction("post/delete");
 
 
 
@@ -60,6 +61,33 @@ export const updatePostAction = createAsyncThunk('post/updated', async (post,{ r
       const {data} = await axios.put(`${baseUrl}/api/posts/${post?.id}`,post,config);
       //dispatch action to update 
       dispatch(resetPostEdit());
+      return data;
+  } catch (error) {
+      if(!error?.response){
+          throw error;
+      }
+      return rejectWithValue(error?.response?.data)
+  }
+})
+
+
+
+//delete
+
+export const deletePostAction = createAsyncThunk('post/deleted', async (postId,{ rejectWithValue, getState, dispatch})=>{
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+        headers: {
+            Authorization: `Bearer ${userAuth.token}`,
+        }
+    }
+    //http call
+  try {
+      const {data} = await axios.delete(`${baseUrl}/api/posts/${postId}`,config);
+      //dispatch action to update 
+      dispatch(resetPostDelete());
       return data;
   } catch (error) {
       if(!error?.response){
@@ -179,12 +207,14 @@ const postSlice = createSlice({name:'post', initialState: {}, extraReducers: (bu
         state.serverErr = action?.error?.message;
     });
 
+
+
     //update post
     builder.addCase(updatePostAction.pending, (state, action) =>{
         state.loading = true;
     });   
     
-    //Dispatch Action to Navigate after updating post
+        //Dispatch Action to Navigate after updating post
     builder.addCase(resetPostEdit, (state, action) =>{
         state.isupdated = true;
     });
@@ -198,6 +228,31 @@ const postSlice = createSlice({name:'post', initialState: {}, extraReducers: (bu
     });
 
     builder.addCase(updatePostAction.rejected, (state, action) =>{
+        state.loading = false;
+        state.appErr = action?.payload?.message;
+        state.serverErr = action?.error?.message;
+    });
+
+    //delete post
+    builder.addCase(deletePostAction.pending, (state, action) =>{
+        state.loading = true;
+
+    });   
+
+     //Dispatch Action to Navigate after deleting post
+     builder.addCase(resetPostDelete, (state, action) =>{
+        state.isDeleted = true;
+    });
+
+    builder.addCase(deletePostAction.fulfilled, (state, action) =>{
+        state.postDeleted = action?.payload;
+        state.loading = false;
+        state.appErr = undefined;
+        state.serverErr = undefined;
+        state.isDeleted = false;
+    });
+
+    builder.addCase(deletePostAction.rejected, (state, action) =>{
         state.loading = false;
         state.appErr = action?.payload?.message;
         state.serverErr = action?.error?.message;
