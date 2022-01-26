@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import DateFormatter from "../../utils/DateFormatter";
 import LoadingComponent from "../../utils/LoadingComponent";
+import AddComment from "../Comments/AddComment";
 
 
 
@@ -91,7 +92,7 @@ const PostDetails = () => {
           </div>
         </div>
         {/* Add comment Form component here */}
-
+        <AddComment postId={id}/>
         <div className="flex justify-center  items-center">
           {/* <CommentsList comments={post?.comments} postId={post?._id} /> */}
           CommentsList
