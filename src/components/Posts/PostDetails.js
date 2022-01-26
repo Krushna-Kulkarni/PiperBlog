@@ -22,7 +22,7 @@ const PostDetails = () => {
   const {postDetails, loading, serverErr, appErr, isDeleted} = post;
   
   //select comments from store
-  const comment = useSelector(state => state?.comments);
+  const comment = useSelector(state => state?.comment);
   const {commentCreated, commentDeleted} = comment;
 
   useEffect(() =>{
@@ -31,10 +31,10 @@ const PostDetails = () => {
 
   //get login user
   const user = useSelector(state => state?.users);
-  const {userAuth:{_id},} = user;
+  const {userAuth} = user;
  
   //post user id === login user id 
-  const isCreatedBy = postDetails?.user?._id === _id;
+  const isCreatedBy = postDetails?.user?._id === userAuth?._id;
 
 
   //Navigate after updating, deleting post

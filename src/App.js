@@ -12,6 +12,7 @@ import CreatePost from './components/Posts/CreatePost';
 import PostsList from './components/Posts/PostsList';
 import PostDetails from './components/Posts/PostDetails';
 import UpdatePost from './components/Posts/UpdatePost';
+import UpdateComment from './components/Comments/UpdateComment';
 
 
 function App() {
@@ -53,6 +54,10 @@ function App() {
           </Route>
           <Route path="/update-post/:id" element={<PrivateProtectedRoute />}>
                     <Route path="" element={<UpdatePost />} />
+          </Route>
+
+          <Route path="/update-comment/:id" element={<PrivateProtectedRoute />}>
+                    <Route path="" element={<UpdateComment />} />
           </Route>
 
 
