@@ -26,7 +26,7 @@ function App() {
 
 {/* Non Protected Route  */}
         <Route path="/" element={<HomePage />}/>
-        <Route path={`${baseUrl}/register`} element={<Register />}/>
+        <Route path="/register" element={<Register />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/posts" element={<PostsList />}/>
         <Route path="/posts/:id" element={<PostDetails />}/>
