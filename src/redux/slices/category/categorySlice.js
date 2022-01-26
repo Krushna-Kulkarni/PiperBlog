@@ -49,13 +49,13 @@ export const createCategoryAction = createAsyncThunk('category/create', async (c
 
 
 //fetch category action
-export const fetchCategoriesAction = createAsyncThunk('category/fetch', async (fetch,{ rejectWithValue, getState, dispatch}) => {
+export const fetchCategoriesAction = createAsyncThunk('category/fetch', async (category,{ rejectWithValue, getState, dispatch}) => {
     //get user token
     const user = getState()?.users;
     const { userAuth } = user;
     const config = {
         headers: {
-            Authorization: `Bearer ${userAuth.token}`,
+            Authorization: `Bearer ${userAuth?.token}`,
         }
     }
     //http call

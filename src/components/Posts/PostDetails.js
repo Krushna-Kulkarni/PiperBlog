@@ -24,6 +24,18 @@ const PostDetails = () => {
   const {postDetails, loading, serverErr, appErr, isDeleted} = post;
 
 
+  //get login user
+  const user = useSelector(state => state?.users);
+  const {userAuth:{_id},} = user;
+ 
+  //post user id === login user id 
+  const isCreatedBy = postDetails?.user?._id === _id;
+  console.log(isCreatedBy)
+
+  // console.log(postDetails?.user?._id)
+  // console.log(_id)
+
+
   //Navigate after updating, deleting post
  if(isDeleted) return <Navigate to ="/posts" />
 
@@ -65,15 +77,15 @@ const PostDetails = () => {
             <div className="max-w-xl mx-auto">
               <p className="mb-6 text-left  text-xl text-gray-200">
                 {postDetails?.description}
-                {/* Show delete and update btn if created user */}
-                <p className="flex">
+                {/* Show delete and update btn if it was created  by user */}
+                {isCreatedBy ? (<p className="flex">
                   <Link to={`/update-post/${postDetails?._id}`} className="p-3">
                     <PencilAltIcon className="h-8 mt-3 text-yellow-300" />
                   </Link>
                   <button onClick={() => dispatch(deletePostAction(postDetails?._id))}className="ml-3">
                     <TrashIcon className="h-8 mt-3 text-red-600" />
                   </button>
-                </p>
+                </p>):null }
               </p>
             </div>
           </div>
