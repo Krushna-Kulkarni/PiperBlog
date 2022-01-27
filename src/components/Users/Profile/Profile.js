@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import DateFormatter from "../../../utils/DateFormatter";
 import capitalize from 'capitalize-word'
+import LoadingComponent from "../../../utils/LoadingComponent";
 
 
 export default function Profile() {
@@ -34,7 +35,10 @@ console.log(profile)
 
   return (
     <>
-      <div className="h-screen flex overflow-hidden bg-white">
+      <div className="min-h-screen bg-green-600 flex justify-center items-center">
+        {loading ?
+         (<LoadingComponent/>): appErr || serverErr ? <h2 className="text-center text-xl text-red-700">{serverErr} {appErr}</h2>:(
+        <div className="h-screen flex overflow-hidden bg-white">
         {/* Static sidebar for desktop */}
 
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
@@ -98,7 +102,7 @@ console.log(profile)
                           {/* is login user */}
                           {/* Upload profile photo */}
                           <Link 
-                            to={`/upload-profile-photo/${profile?._id}`}
+                            to={`/upload-profile-photo/${id}`}
                             className="inline-flex justify-center w-48 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                           >
                             <UploadIcon
@@ -251,6 +255,7 @@ console.log(profile)
             </main>
           </div>
         </div>
+      </div>) }
       </div>
     </>
   );
