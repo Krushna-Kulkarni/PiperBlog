@@ -178,6 +178,37 @@ export const uploadProfilePhotoAction = createAsyncThunk('user/profile-photo', a
 
 
 
+
+
+//follow
+export const followUserAction = createAsyncThunk('user/follow', async (userToFollowId,{ rejectWithValue, getState, dispatch}) => {
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+        headers: {
+            Authorization: `Bearer ${userAuth.token}`,
+        }
+    }
+    //http call
+    try {
+        const {data} = await axios.put(`${baseUrl}/api/users/follow`,
+        {
+            folllowId:userToFollowId
+        },
+        config
+         );
+        return data;
+    } catch (error) {
+        if(!error?.response){
+            throw error;
+        }
+        return rejectWithValue(error?.response?.data)
+    }
+})
+
+
+
 //get user from local storage and place into store
 const userLoginFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -231,20 +262,20 @@ const usersSlices = createSlice({
 
          //profile
          builder.addCase(userProfileAction.pending, (state, action) => {
-            state.loading = true;
-            state.appErr = undefined;
-            state.serverErr = undefined;  
+            state.profileLoading = true;
+            state.profileAppErr = undefined;
+            state.profileServerErr = undefined;  
         });
         builder.addCase(userProfileAction.fulfilled, (state, action) => {
           state.profile = action?.payload;
-          state.loading = false;
-          state.appErr = undefined;
-          state.serverErr = undefined; 
+          state.profileLoading = false;
+          state.profileAppErr = undefined;
+          state.profileServerErr = undefined; 
         });
         builder.addCase(userProfileAction.rejected, (state, action) => {
-            state.appErr = action?.payload?.message;
-            state.serverErr = action?.error?.message;
-            state.loading = false;
+            state.profileAppErr = action?.payload?.message;
+            state.profileServerErr = action?.error?.message;
+            state.profileLoading = false;
         });
 
          //update profile
@@ -285,7 +316,25 @@ const usersSlices = createSlice({
             state.serverErr = undefined;
         });
         builder.addCase(fetchUserDetailsAction.rejected, (state, action) => {
-            console.log(action.payload);
+            state.loading = false;
+            state.appErr = action?.payload?.message;
+            state.serverErr = action?.error?.message;
+        });
+
+
+        //user follow
+        builder.addCase(followUserAction.pending, (state, action) => {
+            state.loading = true;
+            state.appErr = undefined;
+            state.serverErr = undefined;
+        });
+        builder.addCase(followUserAction.fulfilled, (state, action) => {
+            state.loading = false;
+            state.followed= action?.payload;
+            state.appErr = undefined;
+            state.serverErr = undefined;
+        });
+        builder.addCase(followUserAction.rejected, (state, action) => {
             state.loading = false;
             state.appErr = action?.payload?.message;
             state.serverErr = action?.error?.message;

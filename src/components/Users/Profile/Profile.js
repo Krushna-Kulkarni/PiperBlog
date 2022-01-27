@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {HeartIcon, EmojiSadIcon, UploadIcon, UserIcon} from "@heroicons/react/outline";
 import { MailIcon, EyeIcon } from "@heroicons/react/solid";
-import { userProfileAction } from "../../../redux/slices/users/usersSlices";
+import { followUserAction, userProfileAction } from "../../../redux/slices/users/usersSlices";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import DateFormatter from "../../../utils/DateFormatter";
@@ -28,7 +28,7 @@ export default function Profile() {
 
 //user data from store
 const users = useSelector((state) => state.users);
-const {profile, loading, appErr, serverErr} = users;
+const {profile, profileLoading, profileAppErr, profileServerErr} = users;
 
 
 
@@ -36,8 +36,8 @@ const {profile, loading, appErr, serverErr} = users;
   return (
     <>
       <div className="min-h-screen bg-green-600 flex justify-center items-center">
-        {loading ?
-         (<LoadingComponent/>): appErr || serverErr ? <h2 className="text-center text-xl text-red-700">{serverErr} {appErr}</h2>:(
+        {profileLoading ?
+         (<LoadingComponent/>): profileAppErr || profileServerErr ? <h2 className="text-center text-xl text-red-700">{profileServerErr} {profileAppErr}</h2>:(
         <div className="h-screen flex overflow-hidden bg-white">
         {/* Static sidebar for desktop */}
 
@@ -131,7 +131,7 @@ const {profile, loading, appErr, serverErr} = users;
 
                             <>
                               <button
-                                // onClick={followHandler}
+                                onClick={()=>{dispatch(followUserAction(id))}}
                                 type="button"
                                 className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                               >
@@ -140,6 +140,7 @@ const {profile, loading, appErr, serverErr} = users;
                                   aria-hidden="true"
                                 />
                                 <span>Follow </span>
+                                <span className="pl-2">{profile?.followers?.length} </span>
                               </button>
                             </>
                           </div>
