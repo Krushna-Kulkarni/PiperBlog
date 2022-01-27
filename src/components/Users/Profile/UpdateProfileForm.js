@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
-import {Navigate } from "react-router-dom";
+import {Navigate, useParams } from "react-router-dom";
 import *  as Yup from "yup";
 import {useDispatch, useSelector} from "react-redux"
+import { fetchUserDetailsAction, updateUserAction } from "../../../redux/slices/users/usersSlices";
 
 
 //FormSchema
@@ -17,25 +18,39 @@ const formSchema = Yup.object({
 
 
 const UpdateProfileForm = () => {
+
+  const {id} = useParams();
+
   //dispatch
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
+//fetch user details
+  useEffect(()=>{
+    dispatch(fetchUserDetailsAction(id));
+  },[dispatch, id]);
+
+//user data from store
+const users = useSelector((state) => state.users);
+const {userDetails} = users;
+
+
   //Formik
     const formik = useFormik({
+      enableReinitialize:true,
       initialValues:{
-        firstName:"",
-        lastName:"",
-        email:"",
-        bio:"",
+        firstName:userDetails?.firstName,
+        lastName:userDetails?.lastName,
+        email:userDetails?.email,
+        bio:userDetails?.bio,
       },
       onSubmit:(values) =>{
         //dispatch the action
-        // dispatch(registerUserAction(values))
-        console.log(values);
+        dispatch(updateUserAction(values))
       },
       validationSchema: formSchema,
     })
 
-
+    // if(isUpdated) return <Navigate to ={`/profile/${id}`} />
 
 
   return (
