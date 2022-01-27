@@ -1,7 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   BellIcon,
   MenuIcon,
@@ -29,7 +29,7 @@ function classNames(...classes) {
 
 const PrivateNavbar = ({ isLogin }) => {
   const userNavigation = [
-    { name: "Your Profile", href: `/profile` },
+    { name: "Your Profile", href: `/profile/${isLogin?._id}` },
     { name: "Change your password", href: "/update-password" },
   ];
 
