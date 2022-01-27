@@ -63,11 +63,11 @@ function App() {
                     <Route path="" element={<UpdateComment />} />
           </Route>
 
-          <Route path="/profile" element={<PrivateProtectedRoute />}>
+          <Route path="/profile/:id" element={<PrivateProtectedRoute />}>
                     <Route path="" element={<Profile />} />
           </Route>
 
-          <Route path="/upload-photo/:id" element={<PrivateProtectedRoute />}>
+          <Route path="/upload-profile-photo/:id" element={<PrivateProtectedRoute />}>
                     <Route path="" element={<UploadProfilePhoto />} />
           </Route>
 

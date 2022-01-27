@@ -1,11 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  HeartIcon,
-  EmojiSadIcon,
-  UploadIcon,
-  UserIcon,
-} from "@heroicons/react/outline";
+import {HeartIcon, EmojiSadIcon, UploadIcon, UserIcon} from "@heroicons/react/outline";
 import { MailIcon, EyeIcon } from "@heroicons/react/solid";
 import { userProfileAction } from "../../../redux/slices/users/usersSlices";
 import { useDispatch } from "react-redux";
@@ -14,14 +9,14 @@ import DateFormatter from "../../../utils/DateFormatter";
 import capitalize from 'capitalize-word'
 
 
-
-
 export default function Profile() {
 
-  //get user id from store
-  const state = useSelector((state) => state.users);
-  const {userAuth} = state;
-  const id = userAuth?._id;
+  // //get user id from store
+  // const state = useSelector((state) => state.users);
+  // const {userAuth} = state;
+  // const id = userAuth?._id;
+
+  const { id } = useParams();
  
  const dispatch = useDispatch();
 
@@ -103,7 +98,7 @@ console.log(profile)
                           {/* is login user */}
                           {/* Upload profile photo */}
                           <Link 
-                            to={`/upload-photo/${profile?._id}`}
+                            to={`/upload-profile-photo/${profile?._id}`}
                             className="inline-flex justify-center w-48 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                           >
                             <UploadIcon

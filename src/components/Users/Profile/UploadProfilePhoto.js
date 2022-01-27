@@ -3,8 +3,15 @@ import Dropzone from "react-dropzone";
 import { useFormik } from "formik";
 import styled from "styled-components";
 import * as Yup from "yup";
-//Css for dropzone
+import { uploadProfilePhotoAction } from "../../../redux/slices/users/usersSlices";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
+
+
+//Css for dropzone
 const Container = styled.div`
   flex: 1;
   display: flex;
@@ -25,17 +32,28 @@ const formSchema = Yup.object({
 });
 
 export default function UploadProfilePhoto() {
-  //formik
+  const dispatch = useDispatch();
 
+
+  //formik
   const formik = useFormik({
     initialValues: {
       image: "",
     },
     onSubmit: values => {
-      console.log(values);
+      dispatch(uploadProfilePhotoAction(values))
     },
     validationSchema: formSchema,
   });
+
+//store data 
+  const users = useSelector((state) => state?.users)
+  const {profilePhoto, loading, appErr, serverErr, userAuth} = users;
+
+  //Navigate 
+
+  if(profilePhoto) return <Navigate to ={`/profile/${userAuth?._id}`}/>
+
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -49,6 +67,7 @@ export default function UploadProfilePhoto() {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
             {/* Image container here thus Dropzone */}
+            {appErr || serverErr ? (<h2 className="text-center text-red-600">{serverErr} {appErr} </h2>) :null}
             <Container className="">
               <Dropzone
                 onBlur={formik.handleBlur("image")}
@@ -83,7 +102,16 @@ export default function UploadProfilePhoto() {
             </p>
 
             <div>
-              <button
+              {loading? (<button
+                disabled
+                className="inline-flex justify-center w-full px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-500 "
+              >
+                <UploadIcon
+                  className="-ml-1 mr-2 h-5  text-gray-400"
+                  aria-hidden="true"
+                />
+                <span>Loading please wait...</span>
+              </button>):(<button
                 type="submit"
                 className="inline-flex justify-center w-full px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
               >
@@ -92,7 +120,7 @@ export default function UploadProfilePhoto() {
                   aria-hidden="true"
                 />
                 <span>Upload Photo</span>
-              </button>
+              </button>)}
             </div>
           </form>
         </div>
