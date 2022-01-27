@@ -31,7 +31,7 @@ const UpdateProfileForm = () => {
 
 //user data from store
 const users = useSelector((state) => state.users);
-const {userDetails} = users;
+const {userDetails,isUpdated, loading, appErr, serverErr} = users;
 
 
   //Formik
@@ -50,15 +50,20 @@ const {userDetails} = users;
       validationSchema: formSchema,
     })
 
-    // if(isUpdated) return <Navigate to ={`/profile/${id}`} />
+
+    //Navigate after updating
+    if(isUpdated) return <Navigate to ={`/profile/${id}`} />
 
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h3 className="mt-6 text-center text-3xl font-extrabold text-gray-300">
-          you want to update your profile?
+        <h3 className="mt-6 text-center text-2xl font-extrabold text-gray-300">
+          Hey <span className="text-green-300">{userDetails?.firstName}</span>, do you want to update your profile?
         </h3>
+        {/* Error */}
+        {appErr || serverErr ? (<h1 className="text-red-400 text-center text-lg">
+            {serverErr} {" "} {appErr}</h1>): null}
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -161,12 +166,17 @@ const {userDetails} = users;
             </div>
             <div>
               {/* submit btn */}
-              <button
+             {loading ? ( <button
+                disabled
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 "
+              >
+                Loading please wait...
+              </button>):( <button
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Update
-              </button>
+              </button>)}
             </div>
           </form>
 

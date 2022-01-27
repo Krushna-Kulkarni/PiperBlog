@@ -48,7 +48,7 @@ export default function UploadProfilePhoto() {
 
 //store data 
   const users = useSelector((state) => state?.users)
-  const {profilePhoto, loading, appErr, serverErr, userAuth} = users;
+  const {profilePhoto, loading, appErr, serverErr, userAuth} = users; //add state to navigate 'isProfilePhotoUpdated'
 
   //Navigate 
 

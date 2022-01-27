@@ -1,12 +1,20 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import {createAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axios from 'axios'
 import { baseUrl } from '../../../utils/baseURL';
 
 
 
+// Action to Navigate
+
+const resetUserAction = createAction("user/profile/reset");
+
+
+// const resetProfilePhotoAction = createAction("user/profilephoto/reset"); 
+
+
+
+
 //register actions
-
-
 export const registerUserAction = createAsyncThunk('users/register', async (user, {rejectWithValue, getState, dispatch})=>{
     try {
         //http call
@@ -94,6 +102,8 @@ export const updateUserAction = createAsyncThunk('user/update', async (userData,
           bio:userData?.bio,
           email:userData?.email,
       }, config);
+        //dispatch action to reset updated data
+        dispatch(resetUserAction());
       return data;
   } catch (error) {
       if(!error?.response){
@@ -153,8 +163,10 @@ export const uploadProfilePhotoAction = createAsyncThunk('user/profile-photo', a
   try {
       const formData = new FormData();
       formData.append('image', userImg?.image)
-
       const {data} = await axios.put(`${baseUrl}/api/users/profilephoto-upload`, formData, config);
+      
+      //dispatch action to reset profile photo updated 
+      
       return data;
   } catch (error) {
       if(!error?.response){
@@ -241,9 +253,16 @@ const usersSlices = createSlice({
             state.appErr = undefined;
             state.serverErr = undefined;  
         });
+
+            //Dispatch Action
+        builder.addCase(resetUserAction, (state, action) =>{
+        state.isUpdated = true;
+        });   
+
         builder.addCase(updateUserAction.fulfilled, (state, action) => {
           state.loading = false;
           state.userUpdated = action?.payload;
+          state.isUpdated = false;
           state.appErr = undefined;
           state.serverErr = undefined; 
         });
@@ -296,10 +315,16 @@ const usersSlices = createSlice({
         state.appErr = undefined;
         state.serverErr = undefined;
     });
- 
+
+    // //Dispatch Action 
+    // builder.addCase(resetProfilePhotoAction, (state, action) =>{
+    //     state.isProfilePhotoUpdated= true;
+    //     }); 
+
 
     builder.addCase(uploadProfilePhotoAction.fulfilled, (state, action) =>{
         state.profilePhoto = action?.payload;
+        // state.isProfilePhotoUpdated= false;
         state.loading = false;
         state.appErr = undefined;
         state.serverErr = undefined;
