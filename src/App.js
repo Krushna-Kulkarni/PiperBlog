@@ -16,6 +16,7 @@ import UpdateComment from './components/Comments/UpdateComment';
 import Profile from './components/Users/Profile/Profile';
 import UploadProfilePhoto from './components/Users/Profile/UploadProfilePhoto';
 import { baseUrl } from './utils/baseURL';
+import UpdateProfileForm from './components/Users/Profile/UpdateProfileForm';
 
 
 function App() {
@@ -69,6 +70,10 @@ function App() {
 
           <Route path="/upload-profile-photo/:id" element={<PrivateProtectedRoute />}>
                     <Route path="" element={<UploadProfilePhoto />} />
+          </Route>
+
+          <Route path="/update-profile/:id" element={<PrivateProtectedRoute />}>
+                    <Route path="" element={<UpdateProfileForm />} />
           </Route>
 
 

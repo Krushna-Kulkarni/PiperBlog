@@ -1,4 +1,43 @@
+import React from "react";
+import { useFormik } from "formik";
+import {Navigate } from "react-router-dom";
+import *  as Yup from "yup";
+import {useDispatch, useSelector} from "react-redux"
+
+
+//FormSchema
+const formSchema = Yup.object({
+  firstName: Yup.string().required('First Name is Required '),
+  lastName: Yup.string().required('Last Name is Required'),
+  email: Yup.string().required('Email is Required'),
+  bio: Yup.string().required('Bio is Required'),
+})
+
+
+
+
 const UpdateProfileForm = () => {
+  //dispatch
+  // const dispatch = useDispatch();
+  //Formik
+    const formik = useFormik({
+      initialValues:{
+        firstName:"",
+        lastName:"",
+        email:"",
+        bio:"",
+      },
+      onSubmit:(values) =>{
+        //dispatch the action
+        // dispatch(registerUserAction(values))
+        console.log(values);
+      },
+      validationSchema: formSchema,
+    })
+
+
+
+
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -9,7 +48,7 @@ const UpdateProfileForm = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={formik.handleSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -20,6 +59,9 @@ const UpdateProfileForm = () => {
               <div className="mt-1">
                 {/* First name */}
                 <input
+                  value={formik.values.firstName}
+                  onChange={formik.handleChange('firstName')}
+                  onBlur={formik.handleBlur("firstName")}
                   id="firstName"
                   name="firstName"
                   type="text"
@@ -28,8 +70,7 @@ const UpdateProfileForm = () => {
                 />
               </div>
               <div className="text-red-500">
-                {/* {formik.touched.firstName && formik.errors.firstName} */}Err
-                here
+                {formik.touched.firstName && formik.errors.firstName}
               </div>
             </div>
             <div>
@@ -42,6 +83,9 @@ const UpdateProfileForm = () => {
               <div className="mt-1">
                 {/* Last Name */}
                 <input
+                  value={formik.values.lastName}
+                  onChange={formik.handleChange('lastName')}
+                  onBlur={formik.handleBlur("lastName")}
                   id="lastName"
                   name="lastName"
                   type="text"
@@ -51,8 +95,7 @@ const UpdateProfileForm = () => {
               </div>
               {/* Err msg */}
               <div className="text-red-500">
-                {/* {formik.touched.lastName && formik.errors.lastName} */}Err
-                here
+                {formik.touched.lastName && formik.errors.lastName}
               </div>
             </div>
             <div>
@@ -65,6 +108,9 @@ const UpdateProfileForm = () => {
               <div className="mt-1">
                 {/* Email */}
                 <input
+                  value={formik.values.email}
+                  onChange={formik.handleChange('email')}
+                  onBlur={formik.handleBlur("email")}
                   id="email"
                   name="email"
                   type="email"
@@ -74,7 +120,7 @@ const UpdateProfileForm = () => {
               </div>
               {/* err msg */}
               <div className="text-red-500">
-                {/* {formik.touched.email && formik.errors.email} */}Err here
+                {formik.touched.email && formik.errors.email}
               </div>
             </div>
             <div>
@@ -85,6 +131,9 @@ const UpdateProfileForm = () => {
                 Bio
               </label>
               <textarea
+                value={formik.values.bio}
+                onChange={formik.handleChange('bio')}
+                onBlur={formik.handleBlur("bio")}
                 rows="5"
                 cols="10"
                 className="rounded-lg appearance-none block w-full py-3 px-3 text-base text-center leading-tight text-gray-600 bg-transparent focus:bg-transparent  border border-gray-200 focus:border-gray-500  focus:outline-none"
@@ -92,7 +141,7 @@ const UpdateProfileForm = () => {
               ></textarea>
               {/* Err msg */}
               <div className="text-red-500">
-                {/* {formik.touched.bio && formik.errors.bio} */}Err here
+                {formik.touched.bio && formik.errors.bio}
               </div>
             </div>
             <div>

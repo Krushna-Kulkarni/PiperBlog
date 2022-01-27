@@ -113,7 +113,7 @@ const Register = () => {
                     </span>
                     <input value={formik.values.firstName}
                       onChange={formik.handleChange('firstName')}
-                      onBur={formik.handleBlur("firstName")}
+                      onBlur={formik.handleBlur("firstName")}
                       className="w-full pl-4 pr-6 py-4 font-bold placeholder-gray-300 rounded-r-full focus:outline-none"
                       type="firstName"
                       placeholder="First Name"
