@@ -4,6 +4,11 @@ import { baseUrl } from '../../../utils/baseURL';
 
 
 
+//cotom action for redirect
+
+const resetEmailAction = createAction('mail/reset');
+
+
 
 //Actions-----------------
 
@@ -27,7 +32,7 @@ export const sendMailAction = createAsyncThunk('mail/sent', async (email,{ rejec
         },
         config
          );
-        
+         dispatch(resetEmailAction());
         return data;
     } catch (error) {
         if(!error?.response){
@@ -45,22 +50,28 @@ export const sendMailAction = createAsyncThunk('mail/sent', async (email,{ rejec
 
 //slices----------------------
 
-const sendMailSlices = createSlice({name:'mail', initialState: {mail:"sent"}, extraReducers: (builder) =>{
+const sendMailSlices = createSlice({name:'mail', initialState: {}, extraReducers: (builder) =>{
     //create
     builder.addCase(sendMailAction.pending, (state, action) =>{
         state.loading = true;
     });
 
- 
+        //dispatch reset mail Action
+    builder.addCase(resetEmailAction, (state, action) =>{
+        state.isMailSent = true;
+    });
+
     builder.addCase(sendMailAction.fulfilled, (state, action) =>{
         state.mailSent = action?.payload;
+        state.isMailSent = false;
         state.loading = false;
         state.appErr = undefined;
         state.serverErr = undefined;
     });
+
     builder.addCase(sendMailAction.rejected, (state, action) =>{
         state.loading = false;
-        state.appErr = action?.payload.message;
+        state.appErr = action?.payload?.message;
         state.serverErr = action?.error?.message;
     });
   

@@ -26,8 +26,6 @@ const SendEmail = () => {
   const email = userAuth?.email;
 
 
-
-
   
 //dispatch
 const dispatch = useDispatch();
@@ -40,18 +38,19 @@ const dispatch = useDispatch();
     },
     onSubmit:(values) =>{
       //dispatch the action
-      dispatch(sendMailAction(values))
-      console.log(values);
+      dispatch(sendMailAction(values));
     },
     validationSchema: formSchema,
   })
 
+//get data from store
+
+const sendMail = useSelector((state) => state?.sendMail);
+const {isMailSent, loading, appErr, serverErr} = sendMail
 
 
-
-
-
-
+//Navigate to profile
+if(isMailSent) return <Navigate to={`/profile/${userAuth?._id}`}/>
 
 
 
@@ -66,6 +65,8 @@ const dispatch = useDispatch();
 
         <p className="mt-2 text-center text-sm text-gray-600">
           {/* Display err here */}
+            {appErr || serverErr ? (<h2 className="text-red-600 text-center text-lg">
+            {serverErr} {appErr}</h2>): null}
         </p>
         <p className="mt-2 text-center text-sm text-gray-600">
           {/* {emailSent && <div>Sent</div>} */}
@@ -150,12 +151,17 @@ const dispatch = useDispatch();
             </div>
             {/* Submit btn */}
             <div>
-              <button
+              {loading ? (<button
+                disabled
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 "
+              >
+                Loading please wait...
+              </button>):<button
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Send
-              </button>
+              </button>}
             </div>
           </form>
         </div>
