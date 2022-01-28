@@ -84,38 +84,39 @@ export const userProfileAction = createAsyncThunk('user/profile', async (id,{ re
 
 
 
-//follow
-export const followUserAction = createAsyncThunk('user/follow', async (userToFollowId,{ rejectWithValue, getState, dispatch}) => {
-    //get user token
-    const user = getState()?.users;
-    const { userAuth } = user;
-    const config = {
+// Follow
+export const followUserAction = createAsyncThunk(
+    "user/follow",
+    async (userToFollowId, { rejectWithValue, getState, dispatch }) => {
+      //get user token
+      const user = getState()?.users;
+      const { userAuth } = user;
+      const config = {
         headers: {
-            Authorization: `Bearer ${userAuth.token}`,
-        }
-    }
-    //http call
-    try {
-        const {data} = await axios.put(`${baseUrl}/api/users/follow`,
-        {
-            folllowId:userToFollowId
+          Authorization: `Bearer ${userAuth?.token}`,
         },
-        config
-         );
+      };
+      //http call
+      try {
+        const { data } = await axios.put(
+          `${baseUrl}/api/users/follow`,
+          { followId: userToFollowId },
+          config
+        );
         return data;
-    } catch (error) {
-        if(!error?.response){
-            throw error;
+      } catch (error) {
+        if (!error?.response) {
+          throw error;
         }
-        return rejectWithValue(error?.response?.data)
+        return rejectWithValue(error?.response?.data);
+      }
     }
-})
-
-
-// unFollow
-export const unfollowUserAction = createAsyncThunk(
+  );
+  
+  // unFollow
+  export const unfollowUserAction = createAsyncThunk(
     "user/unfollow",
-    async (userToUnFollowId, { rejectWithValue, getState, dispatch }) => {
+    async (unFollowId, { rejectWithValue, getState, dispatch }) => {
       //get user token
       const user = getState()?.users;
       const { userAuth } = user;
@@ -128,7 +129,7 @@ export const unfollowUserAction = createAsyncThunk(
       try {
         const { data } = await axios.put(
           `${baseUrl}/api/users/unfollow`,
-          { unFollowId:userToUnFollowId },
+          { unFollowId },
           config
         );
         return data;
