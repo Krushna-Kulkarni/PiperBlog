@@ -3,6 +3,9 @@ import { useFormik } from "formik";
 import {Navigate } from "react-router-dom";
 import *  as Yup from "yup";
 import {useDispatch, useSelector} from "react-redux"
+import { sendMailAction } from "../../../redux/slices/email/emailSlices";
+
+
 
 //FormSchema
 const formSchema = Yup.object({
@@ -16,18 +19,28 @@ const formSchema = Yup.object({
 
 const SendEmail = () => {
 
+
+    //get user email from store
+  const state = useSelector((state) => state.users);
+  const {userAuth} = state;
+  const email = userAuth?.email;
+
+
+
+
+  
 //dispatch
 const dispatch = useDispatch();
 //Formik
   const formik = useFormik({
     initialValues:{
-      recipientEmail:"a@g.com",
+      recipientEmail:email,
       subject:"",
       message:"",
     },
     onSubmit:(values) =>{
       //dispatch the action
-      // dispatch(registerUserAction(values))
+      dispatch(sendMailAction(values))
       console.log(values);
     },
     validationSchema: formSchema,
