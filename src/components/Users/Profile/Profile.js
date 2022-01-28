@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {HeartIcon, EmojiSadIcon, UploadIcon, UserIcon} from "@heroicons/react/outline";
 import { MailIcon, EyeIcon } from "@heroicons/react/solid";
-import { followUserAction, userProfileAction } from "../../../redux/slices/users/usersSlices";
+import { followUserAction, unfollowUserAction, userProfileAction } from "../../../redux/slices/users/usersSlices";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import DateFormatter from "../../../utils/DateFormatter";
@@ -20,15 +20,18 @@ export default function Profile() {
   const { id } = useParams();
  
  const dispatch = useDispatch();
+ //user data from store
+const users = useSelector(state => state?.users);
+const {profile, profileLoading, profileAppErr, followed,
+  unFollowed, profileServerErr} = users;
+
 
  //fetch user profile
  useEffect(() =>{
    dispatch(userProfileAction(id))
- },[id, dispatch])
+ },[id, dispatch,followed, unFollowed])
 
-//user data from store
-const users = useSelector((state) => state.users);
-const {profile, profileLoading, profileAppErr, profileServerErr} = users;
+
 
 
 
@@ -112,44 +115,49 @@ const {profile, profileLoading, profileAppErr, profileServerErr} = users;
                             <span>Upload Photo</span>
                           </Link>
                         </div>
-
                         <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                          {/* // Hide follow button from the same */}
-                          <div>
-                            <button
-                              // onClick={() =>
-                              //   dispatch(unFollowUserAction(profile?._id))
-                              // }
-                              className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
-                            >
-                              <EmojiSadIcon
-                                className="-ml-1 mr-2 h-5 w-5 text-gray-400"
-                                aria-hidden="true"
-                              />
-                              <span>Unfollow</span>
-                            </button>
+                              {/* // Hide follow button from the same */}
+                              <div>
+                                {profile?.isFollowing ? (
+                                  <button
+                                    onClick={() =>
+                                      dispatch(unfollowUserAction(id))
+                                    }
+                                    className="mr-2 inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                                  >
+                                    <EmojiSadIcon
+                                      className="-ml-1 mr-2 h-5 w-5 text-gray-400"
+                                      aria-hidden="true"
+                                    />
+                                    <span>Unfollow</span>
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() =>
+                                      dispatch(followUserAction(id))
+                                    }
+                                    type="button"
+                                    className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+                                  >
+                                    <HeartIcon
+                                      className="-ml-1 mr-2 h-5 w-5 text-gray-400"
+                                      aria-hidden="true"
+                                    />
+                                    <span>Follow </span>
+                                    <span className="pl-2">
+                                      {profile?.followers?.length}
+                                    </span>
+                                  </button>
+                                )}
 
-                            <>
-                              <button
-                                onClick={()=>{dispatch(followUserAction(id))}}
-                                type="button"
-                                className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
-                              >
-                                <HeartIcon
-                                  className="-ml-1 mr-2 h-5 w-5 text-gray-400"
-                                  aria-hidden="true"
-                                />
-                                <span>Follow </span>
-                                <span className="pl-2">{profile?.followers?.length} </span>
-                              </button>
-                            </>
-                          </div>
+                                <></>
+                              </div>
 
                           {/* Update Profile */}
 
                           <>
                             <Link
-                              to={`/update-profile/${id}`}
+                              to={`/update-profile/${profile?._id}`}
                               className="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
                             >
                               <UserIcon

@@ -52,7 +52,7 @@ const {userDetails,isUpdated, loading, appErr, serverErr} = users;
 
 
     //Navigate after updating
-    if(isUpdated) return <Navigate to ={`/profile/${id}`} />
+    if(isUpdated) return <Navigate to ={`/profile${id}`} />
 
 
   return (

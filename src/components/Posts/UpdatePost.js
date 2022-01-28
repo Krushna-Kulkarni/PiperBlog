@@ -18,6 +18,7 @@ export default function UpdatePost() {
   const { id } = useParams();
   //fetch post in the url
   const dispatch = useDispatch();
+
   useEffect(() =>{
     dispatch(fetchPostDetailsAction(id))
   }, [id, dispatch]);
@@ -28,7 +29,7 @@ export default function UpdatePost() {
 
     //select updated post from store
     const postupdate = useSelector(state => state?.post);
-    const {loading, serverErr, appErr, isupdated} = postData;  
+    const {loading, serverErr, appErr, isupdated} = postupdate;  
 
   //formik
   const formik = useFormik({
@@ -40,8 +41,6 @@ export default function UpdatePost() {
     },
 
     onSubmit: values => {
-      //build up the data for update
-
       //dispatch the action
       dispatch(updatePostAction({title: values.title,
         description: values.description, 
