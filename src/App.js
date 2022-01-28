@@ -17,6 +17,7 @@ import Profile from './components/Users/Profile/Profile';
 import UploadProfilePhoto from './components/Users/Profile/UploadProfilePhoto';
 import { baseUrl } from './utils/baseURL';
 import UpdateProfileForm from './components/Users/Profile/UpdateProfileForm';
+import SendEmail from './components/Users/Emailing/SendEmail';
 
 
 function App() {
@@ -49,6 +50,10 @@ function App() {
 
           <Route path="/update-category/:id" element={<AdminRoute />}>
                     <Route path="" element={<UpdateCategory />} />
+          </Route>
+
+          <Route path="/send-email" element={<AdminRoute />}>
+                    <Route path="" element={<SendEmail />} />
           </Route>
 
 
