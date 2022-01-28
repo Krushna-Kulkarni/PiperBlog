@@ -30,14 +30,13 @@ const Register = () => {
       onSubmit:(values) =>{
         //dispatch the action
         dispatch(registerUserAction(values))
-        console.log(values);
       },
       validationSchema: formSchema,
     })
 
     //select state from store
     const storeData = useSelector(store => store?.users);
-    const {loading,serverErr,appErr, registered} = storeData;
+    const {loading,serverErr,appErr, userAuth, registered} = storeData;
     
     //redirect
     if(registered) {
