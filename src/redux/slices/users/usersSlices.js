@@ -83,6 +83,67 @@ export const userProfileAction = createAsyncThunk('user/profile', async (id,{ re
 })
 
 
+
+//follow
+export const followUserAction = createAsyncThunk('user/follow', async (userToFollowId,{ rejectWithValue, getState, dispatch}) => {
+    //get user token
+    const user = getState()?.users;
+    const { userAuth } = user;
+    const config = {
+        headers: {
+            Authorization: `Bearer ${userAuth.token}`,
+        }
+    }
+    //http call
+    try {
+        const {data} = await axios.put(`${baseUrl}/api/users/follow`,
+        {
+            folllowId:userToFollowId
+        },
+        config
+         );
+        return data;
+    } catch (error) {
+        if(!error?.response){
+            throw error;
+        }
+        return rejectWithValue(error?.response?.data)
+    }
+})
+
+
+// unFollow
+export const unfollowUserAction = createAsyncThunk(
+    "user/unfollow",
+    async (userToUnFollowId, { rejectWithValue, getState, dispatch }) => {
+      //get user token
+      const user = getState()?.users;
+      const { userAuth } = user;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userAuth?.token}`,
+        },
+      };
+      //http call
+      try {
+        const { data } = await axios.put(
+          `${baseUrl}/api/users/unfollow`,
+          { unFollowId:userToUnFollowId },
+          config
+        );
+        return data;
+      } catch (error) {
+        if (!error?.response) {
+          throw error;
+        }
+        return rejectWithValue(error?.response?.data);
+      }
+    }
+  );
+
+
+
+
 //update profile 
 export const updateUserAction = createAsyncThunk('user/update', async (userData,{ rejectWithValue, getState, dispatch})=>{
     //get user token
@@ -96,7 +157,7 @@ export const updateUserAction = createAsyncThunk('user/update', async (userData,
     //http call
   try {
 
-      const {data} = await axios.put(`${baseUrl}/api/users/${userData?._id}`, {
+      const {data} = await axios.put(`${baseUrl}/api/users/`, {
           lastName:userData?.lastName,
           firstName:userData?.firstName,
           bio:userData?.bio,
@@ -180,32 +241,7 @@ export const uploadProfilePhotoAction = createAsyncThunk('user/profile-photo', a
 
 
 
-//follow
-export const followUserAction = createAsyncThunk('user/follow', async (userToFollowId,{ rejectWithValue, getState, dispatch}) => {
-    //get user token
-    const user = getState()?.users;
-    const { userAuth } = user;
-    const config = {
-        headers: {
-            Authorization: `Bearer ${userAuth.token}`,
-        }
-    }
-    //http call
-    try {
-        const {data} = await axios.put(`${baseUrl}/api/users/follow`,
-        {
-            folllowId:userToFollowId
-        },
-        config
-         );
-        return data;
-    } catch (error) {
-        if(!error?.response){
-            throw error;
-        }
-        return rejectWithValue(error?.response?.data)
-    }
-})
+
 
 
 
@@ -278,7 +314,9 @@ const usersSlices = createSlice({
             state.profileLoading = false;
         });
 
-         //update profile
+        
+        
+        //update profile
          builder.addCase(updateUserAction.pending, (state, action) => {
             state.loading = true;
             state.appErr = undefined;
@@ -302,6 +340,8 @@ const usersSlices = createSlice({
             state.appErr = action?.payload?.message;
             state.serverErr = action?.error?.message;
         });
+
+
 
         //user details
         builder.addCase(fetchUserDetailsAction.pending, (state, action) => {
@@ -331,14 +371,36 @@ const usersSlices = createSlice({
         builder.addCase(followUserAction.fulfilled, (state, action) => {
             state.loading = false;
             state.followed= action?.payload;
+            state.unFollowed = undefined;
             state.appErr = undefined;
             state.serverErr = undefined;
         });
         builder.addCase(followUserAction.rejected, (state, action) => {
             state.loading = false;
             state.appErr = action?.payload?.message;
+            state.unFollowed = undefined;
             state.serverErr = action?.error?.message;
         });
+
+        //user unFollow
+        builder.addCase(unfollowUserAction.pending, (state, action) => {
+        state.unfollowLoading = true;
+        state.unFollowedAppErr = undefined;
+        state.unfollowServerErr = undefined;
+      });
+        builder.addCase(unfollowUserAction.fulfilled, (state, action) => {
+        state.unfollowLoading = false;
+        state.unFollowed = action?.payload;
+        state.followed= undefined;
+        state.unFollowedAppErr = undefined;
+        state.unfollowServerErr = undefined;
+      });
+        builder.addCase(unfollowUserAction.rejected, (state, action) => {
+        state.unfollowLoading = false;
+        state.unFollowedAppErr = action?.payload?.message;
+        state.followed= undefined;
+        state.unfollowServerErr = action?.error?.message;
+      });
 
 
         //logout
