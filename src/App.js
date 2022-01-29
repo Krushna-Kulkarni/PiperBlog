@@ -15,9 +15,9 @@ import UpdatePost from './components/Posts/UpdatePost';
 import UpdateComment from './components/Comments/UpdateComment';
 import Profile from './components/Users/Profile/Profile';
 import UploadProfilePhoto from './components/Users/Profile/UploadProfilePhoto';
-import { baseUrl } from './utils/baseURL';
 import UpdateProfileForm from './components/Users/Profile/UpdateProfileForm';
 import SendEmail from './components/Users/Emailing/SendEmail';
+import AccountVerified from './components/Users/AccountVerification/AccountVerified';
 
 
 function App() {
@@ -79,6 +79,10 @@ function App() {
 
           <Route path="/update-profile/:id" element={<PrivateProtectedRoute />}>
                     <Route path="" element={<UpdateProfileForm />} />
+          </Route>
+
+          <Route path="/verify-account/:token" element={<PrivateProtectedRoute />}>
+                    <Route path="" element={<AccountVerified />} />
           </Route>
 
 
