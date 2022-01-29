@@ -100,15 +100,15 @@ const isLoginUser = userAuth?._id === profile?._id;
                             <DateFormatter date={profile?.createdAt} />{" "}
                           </p>
                           <p className="text-green-600 mt-2 mb-2">
-                            {profile?.posts.length} posts{" "}
-                            {profile?.followers.length} followers{" "}
-                            {profile?.following.length} following
+                            {profile?.posts?.length} posts{" "}
+                            {profile?.followers?.length} followers{" "}
+                            {profile?.following?.length} following
                           </p>
                           {/* Who view my profile */}
                           <div className="flex items-center  mb-2">
                             <EyeIcon className="h-5 w-5 " />
                             <div className="pl-2">
-                              {/* {profile?.viewedBy?.length}{" "} */}
+                              {profile?.viewedBy?.length}{" "}
                               <span className="text-indigo-400 cursor-pointer hover:underline">
                                 users viewed your profile
                               </span>
@@ -212,21 +212,23 @@ const isLoginUser = userAuth?._id === profile?._id;
                 <div className="flex justify-center place-items-start flex-wrap  md:mb-0">
                   <div className="w-full md:w-1/3 px-4 mb-4 md:mb-0">
                     <h1 className="text-center text-xl border-gray-500 mb-2 border-b-2">
-                      Who viewed my profile : 9
+                      Who viewed my profile :{profile?.viewedBy?.length}
                     </h1>
 
                     {/* Who view my post */}
                     <ul className="">
-                      <Link to="#">
+                     {profile?.viewedBy?.length <= 0 ? (<h1>No Viewer</h1>):(profile?.viewedBy?.map( user =>(
+                       <li>
+                          <Link to="#">
                         <div className="flex mb-2 items-center space-x-4 lg:space-x-6">
                           <img
                             className="w-16 h-16 rounded-full lg:w-20 lg:h-20"
-                            // src={user.profilePhoto}
-                            // alt={user?._id}
+                            src={user?.profilePhoto}
+                            alt={user?.firstName}
                           />
                           <div className="font-medium text-lg leading-6 space-y-1">
                             <h3>
-                              {/* {user?.firstName} {user?.lastName} */}Name
+                              {user?.firstName} {user?.lastName}
                             </h3>
                             <p className="text-indigo-600">
                               {/* {user.accountType} */} Account Type
@@ -234,6 +236,8 @@ const isLoginUser = userAuth?._id === profile?._id;
                           </div>
                         </div>
                       </Link>
+                       </li>
+                     )))}
                     </ul>
                   </div>
                   {/* All my Post */}
