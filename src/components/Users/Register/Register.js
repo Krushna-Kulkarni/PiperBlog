@@ -40,7 +40,7 @@ const Register = () => {
     
     //redirect
     if(registered) {
-      return <Navigate  to = "/profile"/>
+      return <Navigate  to = {`/profile/${userAuth?._id}`}/>
     }
 
   return (
