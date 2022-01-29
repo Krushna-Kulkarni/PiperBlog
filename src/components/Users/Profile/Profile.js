@@ -29,7 +29,7 @@ export default function Profile() {
  //user data from store
 const users = useSelector(state => state?.users);
 const {profile, profileLoading, profileAppErr, followed,
-  unFollowed, profileServerErr} = users;
+  unFollowed, profileServerErr, userAuth} = users;
 
 
  //fetch user profile
@@ -46,8 +46,8 @@ const {profile, profileLoading, profileAppErr, followed,
   }
 
 
-
-
+//isLogin user
+const isLoginUser = userAuth?._id === profile?._id;
 
   return (
     <>
@@ -130,7 +130,8 @@ const {profile, profileLoading, profileAppErr, followed,
                         </div>
                         <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
                               {/* // Hide follow button from the same */}
-                              <div>
+                          {!isLoginUser && (
+                             <div>
                                 {profile?.isFollowing ? (
                                   <button
                                     onClick={() =>
@@ -164,7 +165,7 @@ const {profile, profileLoading, profileAppErr, followed,
                                 )}
 
                                 <></>
-                              </div>
+                              </div>) }
 
                           {/* Update Profile */}
 
